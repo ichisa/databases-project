@@ -121,16 +121,39 @@ lines(dfpolm1,col="blue")
 lines(dfpolm2,col="black")
 
 #Average values for year 2000
-dfpola<-df_averaged2000%>%group_by(poligon.id,date)%>%summarise(average=(mean(average)))%>%group_by(date)%>%summarise(avepol=mean(average))
+dfpola<-df_averaged2000%>%group_by(poligon.id,date)%>%summarise(average=(mean(average)))
 dfpola$date=year(date)
+dfpola<-dfpola%>%group_by(date)%>%summarise(avepol=mean(average))
 
-#Averaging minimum values for year 2005
-dfpolm1<-df_yearly_min2005%>%group_by(poligon.id,year)%>%summarise(minimum=(min(NDVI)))%>%group_by(year)%>%summarise(minpol=mean(minimum))%>%ungroup()
+#Average values for year 2005
+dfpolb<-df_averaged2005%>%group_by(poligon.id,date)%>%summarise(average=(mean(average)))
+dfpolb$date=year(date)
+dfpolb<-dfpolb%>%group_by(date)%>%summarise(avepol=mean(average))
 
-#Averaging minimum values for year 2010
-dfpolm2<-df_yearly_min2010%>%group_by(poligon.id,year)%>%summarise(minimum=(min(NDVI)))%>%group_by(year)%>%summarise(minpol=mean(minimum))%>%ungroup()
+#Average values for year 2010
+dfpolc<-df_averaged2010%>%group_by(poligon.id,date)%>%summarise(average=(mean(average)))
+dfpolc$date=year(date)
+dfpolc<-dfpolc%>%group_by(date)%>%summarise(avepol=mean(average))
 
-plot(dfpolm,type="l",col="red",main="MINIMUM VALUES")
-lines(dfpolm1,col="blue")
-lines(dfpolm2,col="black")
+plot(dfpola,type="l",col="red",main="AVERAGE VALUES")
+lines(dfpolb,col="blue")
+lines(dfpolc,col="black")
 
+#============================================================================
+#ESTIMATE VARIABILITY BETWEEN MIN AND MAX VALUES
+#============================================================================
+#YEAR 2000
+dx<-data.frame(dfpol$year,(dfpol$maxpol-dfpolm$minpol))
+plot(dx)
+
+#YEAR 2005
+dy<-data.frame(dfpol$year,(dfpol1$maxpol-dfpolm1$minpol))
+plot(dy)
+
+#YEAR 2010
+dz<-data.frame(dfpol$year,(dfpol2$maxpol-dfpolm2$minpol))
+plot(dz)
+
+plot(dx,col="red",main="RANGE IN VARIABILITY")
+points(dy,col="blue")
+points(dz,col="black")
