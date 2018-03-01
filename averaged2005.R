@@ -6,12 +6,14 @@ View(X2005transposed)
 
 library(tidyverse)
 library(lubridate)
+library(ggplot2)
 
 df2005<-X2005transposed
 
 df2005<-df2005%>%select(-N_PX_LOTE)
 
 date<-as.Date(paste(df2005$X2,df2005$X3,df2005$X4, sep = "-"), "%Y-%m-%d")
+
 
 df2005$date<-date
 
@@ -103,7 +105,7 @@ dfpol1<-df_yearly_max2005%>%group_by(poligon.id,year)%>%summarise(maximum=(max(N
 #Averaging maximum values for year 2010
 dfpol2<-df_yearly_max2010%>%group_by(poligon.id,year)%>%summarise(maximum=(max(NDVI)))%>%group_by(year)%>%summarise(maxpol=mean(maximum))%>%ungroup()
 
-plot(dfpol,type="l",col="red",main="MAXIMUM VALUES")
+plot(dfpol,type="l",col="red",main="MAXIMUM VALUES",xlab="Year", ylab="NDVI")
 lines(dfpol1,col="blue")
 lines(dfpol2,col="black")
 
@@ -116,7 +118,7 @@ dfpolm1<-df_yearly_min2005%>%group_by(poligon.id,year)%>%summarise(minimum=(min(
 #Averaging minimum values for year 2010
 dfpolm2<-df_yearly_min2010%>%group_by(poligon.id,year)%>%summarise(minimum=(min(NDVI)))%>%group_by(year)%>%summarise(minpol=mean(minimum))%>%ungroup()
 
-plot(dfpolm,type="l",col="red",main="MINIMUM VALUES")
+plot(dfpolm,type="l",col="red",main="MINIMUM VALUES",xlab="Year", ylab="NDVI")
 lines(dfpolm1,col="blue")
 lines(dfpolm2,col="black")
 
@@ -135,7 +137,7 @@ dfpolc<-df_averaged2010%>%group_by(poligon.id,date)%>%summarise(average=(mean(av
 dfpolc$date=year(date)
 dfpolc<-dfpolc%>%group_by(date)%>%summarise(avepol=mean(average))
 
-plot(dfpola,type="l",col="red",main="AVERAGE VALUES")
+plot(dfpola,type="l",col="red",main="AVERAGE VALUES",xlab="Year", ylab="NDVI")
 lines(dfpolb,col="blue")
 lines(dfpolc,col="black")
 
@@ -144,16 +146,28 @@ lines(dfpolc,col="black")
 #============================================================================
 #YEAR 2000
 dx<-data.frame(dfpol$year,(dfpol$maxpol-dfpolm$minpol))
+names(dx)<-c("year","variability")
 plot(dx)
 
 #YEAR 2005
 dy<-data.frame(dfpol$year,(dfpol1$maxpol-dfpolm1$minpol))
+names(dy)<-c("year","variability")
 plot(dy)
 
 #YEAR 2010
 dz<-data.frame(dfpol$year,(dfpol2$maxpol-dfpolm2$minpol))
+names(dz)<-c("year","variability")
 plot(dz)
 
-plot(dx,col="red",main="RANGE IN VARIABILITY")
+plot(dx,col="red",main="RANGE IN VARIABILITY",xlab="Year", ylab="NDVI")
 points(dy,col="blue")
 points(dz,col="black")
+
+  ggplot() + 
+    geom_point(data=dx, aes(x=year, y=variability), color='red') + 
+    geom_point(data=dy, aes(x=year, y=variability), color='blue')+
+    geom_point(data=dz, aes(x=year, y=variability), color="black")+
+    xlab("Year") + ylab("NDVI Variability") +
+    ggtitle("RANGE IN VARIABILITY")
+    
+
