@@ -79,29 +79,58 @@ plot(test1,type="l", col="red")
 lines(test2,col="blue")
 lines(test3,col="green")
 
-#(as.integer(df_yearly_max2010$poligon.id))
-#plot(df_yearly_min2010$poligon.id,df_yearly_min2010$NDVI,col="red")
+
+#============================================================================
+#PLOTS: AVERAGE NDVIS FOR EVERY DATE (MAX VALUES) FOR YEARS 2000, 2005, 2010
+#============================================================================
+#test4<-df_yearly_max2000%>%group_by(date)%>%summarise(averageperdate=mean(NDVI))%>%ungroup()
+#test5<-df_yearly_max2005%>%group_by(date)%>%summarise(averageperdate=mean(NDVI))%>%ungroup()
+#test6<-df_yearly_max2010%>%group_by(date)%>%summarise(averageperdate=mean(NDVI))%>%ungroup()
+#plot(test4,type="l", col="red")
+#lines(test5,col="blue")
+#lines(test6,col="green")
 
 
-x<-
+#============================================================================
+#AVERAGED DATAFRAMES FIRST BY POLYGON ID AND THEN BY YEAR
+#============================================================================
+#Averaging maximum values for year 2000
+dfpol<-df_yearly_max2000%>%group_by(poligon.id,year)%>%summarise(maximum=(max(NDVI)))%>%group_by(year)%>%summarise(maxpol=mean(maximum))%>%ungroup()
 
+#Averaging maximum values for year 2005
+dfpol1<-df_yearly_max2005%>%group_by(poligon.id,year)%>%summarise(maximum=(max(NDVI)))%>%group_by(year)%>%summarise(maxpol=mean(maximum))%>%ungroup()
 
+#Averaging maximum values for year 2010
+dfpol2<-df_yearly_max2010%>%group_by(poligon.id,year)%>%summarise(maximum=(max(NDVI)))%>%group_by(year)%>%summarise(maxpol=mean(maximum))%>%ungroup()
 
+plot(dfpol,type="l",col="red",main="MAXIMUM VALUES")
+lines(dfpol1,col="blue")
+lines(dfpol2,col="black")
 
+#Averaging minimum values for year 2000
+dfpolm<-df_yearly_min2000%>%group_by(poligon.id,year)%>%summarise(minimum=(min(NDVI)))%>%group_by(year)%>%summarise(minpol=mean(minimum))%>%ungroup()
 
+#Averaging minimum values for year 2005
+dfpolm1<-df_yearly_min2005%>%group_by(poligon.id,year)%>%summarise(minimum=(min(NDVI)))%>%group_by(year)%>%summarise(minpol=mean(minimum))%>%ungroup()
 
+#Averaging minimum values for year 2010
+dfpolm2<-df_yearly_min2010%>%group_by(poligon.id,year)%>%summarise(minimum=(min(NDVI)))%>%group_by(year)%>%summarise(minpol=mean(minimum))%>%ungroup()
 
-library(ggplot2)
-ggplot(df_yearly_max$date,df_yearly_max$NDVI,col="red")+
-  geom_point(df_yearly_min$date,df_yearly_min$NDVI,col="blue")
+plot(dfpolm,type="l",col="red",main="MINIMUM VALUES")
+lines(dfpolm1,col="blue")
+lines(dfpolm2,col="black")
 
-stl(df_averaged, s.window, s.degree = 0,
-    t.window = NULL, t.degree = 1,
-    l.window = nextodd(period), l.degree = t.degree,
-    s.jump = ceiling(s.window/10),
-    t.jump = ceiling(t.window/10),
-    l.jump = ceiling(l.window/10),
-    robust = FALSE,
-    inner = if(robust)  1 else 2,
-    outer = if(robust) 15 else 0,
-    na.action = na.fail)
+#Average values for year 2000
+dfpola<-df_averaged2000%>%group_by(poligon.id,date)%>%summarise(average=(mean(average)))%>%group_by(date)%>%summarise(avepol=mean(average))
+dfpola$date=year(date)
+
+#Averaging minimum values for year 2005
+dfpolm1<-df_yearly_min2005%>%group_by(poligon.id,year)%>%summarise(minimum=(min(NDVI)))%>%group_by(year)%>%summarise(minpol=mean(minimum))%>%ungroup()
+
+#Averaging minimum values for year 2010
+dfpolm2<-df_yearly_min2010%>%group_by(poligon.id,year)%>%summarise(minimum=(min(NDVI)))%>%group_by(year)%>%summarise(minpol=mean(minimum))%>%ungroup()
+
+plot(dfpolm,type="l",col="red",main="MINIMUM VALUES")
+lines(dfpolm1,col="blue")
+lines(dfpolm2,col="black")
+
