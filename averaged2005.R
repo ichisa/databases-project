@@ -36,6 +36,7 @@ plot(df_averaged2005$date,df_averaged2005$average, type="l")
 df_yearly_max2005<-df%>%mutate(year=year(date))%>%group_by(poligon.id,year)%>%arrange(-NDVI)%>%slice(1)
 df_yearly_max2005%>%ungroup()%>%select(date,year,poligon.id,NDVI)
 
+
 df_yearly_min2005<-df%>%mutate(year=year(date))%>%group_by(poligon.id,year)%>%arrange(NDVI)%>%slice(1)
 df_yearly_min2005%>%ungroup()%>%select(date,year,poligon.id,NDVI)
 
@@ -170,4 +171,3 @@ points(dz,col="black")
     xlab("Year") + ylab("NDVI Variability") +
     ggtitle("RANGE IN VARIABILITY")
     
-
