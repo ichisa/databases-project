@@ -52,7 +52,7 @@ df2005 <- subset(df2005, select=-poligon)
 #========loads 2010==========#
 ##############################
 
-
+#the csv file was too big and therefore is uploaded in two parts
 #loads 2010_1
 ###########
 EVI2010_1 <- read_csv("C:/Users/Elisa/Documents/databases/project/EVI2010_1R.csv", 
@@ -64,14 +64,11 @@ EVI2010_1<-subset(EVI2010_1, select = -c(X1,X2,X3))# erase variables that are no
 
 df2010_1<-gather(EVI2010_1, key="poligon", value="NDVI", -date) #rearranges the df
 
-
 #re-arranges data frames in three colums: Date-Polygon-Value
 #converts the pligon variable into a numeric variable
 df2010_1$poligon.id<-ifelse(substr(df2010_1$poligon, start = 2, stop = 2)=="_", as.character(substr(df2010_1$poligon, start = 1, stop = 1)), as.character(substr(df2010_1$poligon, start = 1, stop = 2)))
 
-
 df2010_1<- subset(df2010_1, select=-poligon)#removes the info of the poligon as a character
-
 
 #loads 2010_2
 ###########
